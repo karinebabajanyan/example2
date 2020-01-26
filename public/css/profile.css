@@ -1,0 +1,311 @@
+.glyphicon {  margin-bottom: 10px;margin-right: 10px;}
+.img-rounded{  width: 100%; }
+.leftcolumn{margin: auto;width: 80%;}
+.fakeimg {
+    width: 50%;
+    /*background-color: red;*/
+}
+.text{display: inline;}
+.newPost {
+    margin: auto;
+    padding: 10px 40px;
+    width: 100%;
+    max-width: 800px;
+    min-width: 480px;
+    background: #FFF;
+    font-family: 'Asap', sans-serif;}
+.title{
+    padding-left: 15px;
+    width: 100%;
+    height: 45px;
+    outline: none;
+    font-family: 'Bree Serif', serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.description{
+    padding-left: 15px;
+    width: 100%;
+    outline: none;
+    font-family: 'Bree Serif', serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.avatar-upload {
+    position: relative;
+    max-width: 205px;
+    margin: 50px auto;
+}
+.avatar-upload .avatar-edit {
+    position: absolute;
+    right: 30px;
+    z-index: 1;
+    top: 10px;
+}
+.avatar-upload .avatar-edit input {
+    display: none;
+}
+.avatar-upload .avatar-edit input + label {
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 0;
+    border-radius: 100%;
+    background: #FFFFFF;
+    border: 1px solid transparent;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    font-weight: normal;
+    transition: all 0.2s ease-in-out;
+}
+.avatar-upload .avatar-edit input + label:hover {
+    background: #f1f1f1;
+    border-color: #d6d6d6;
+}
+.avatar-upload .avatar-edit input + label:after {
+    content: "\f030";
+    font-family: 'FontAwesome';
+    color: #757575;
+    position: absolute;
+    top: 7px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin: auto;
+}
+.avatar-upload .avatar-preview {
+    width: 192px;
+    height: 192px;
+    position: relative;
+    border-radius: 100%;
+    border: 6px solid #FFF;
+    box-shadow: 0px 2px 4px 13px rgba(0, 0, 0, 0.1);
+}
+.avatar-upload .avatar-preview > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.media-object{
+    display: block;
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    width: 300px;
+}
+li{
+    /*box-sizing: border-box;*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+    list-style-type: none;
+}
+
+/*html {*/
+    /*overflow: scroll;*/
+    /*overflow-x: hidden;*/
+/*}*/
+/*::-webkit-scrollbar {*/
+    /*width: 0px;*/
+    /*background:  transparent;*/
+/*}*/
+/*::-webkit-scrollbar-thumb {*/
+    /*background: transparent;*/
+/*}*/
+
+
+#pagewrap{
+    max-width: 80%;
+    margin: auto;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 15px;
+    color: #666;
+    background-color: #f5f8f9;
+}
+
+header a{color: inherit; text-decoration: none; font-size: 1.5em; vertical-align: middle;}
+header h3{font-weight: 400;}
+
+.chatbox{
+    background-color: #f5f8f9;
+    padding: 10px 20px;
+    width: 100%;
+    height: 350px;
+    overflow-y: scroll;
+}
+
+#message{
+    width: 100%;
+    margin-left: 0px;
+}
+
+.matt-line{
+    max-width: 100%;
+    min-width: 100%;
+    display: inline-block;
+    font-size: .85em;
+    position: relative;
+    margin: 8% 0 3% 0;
+    animation: scaler 150ms ease-out;
+    background-color: #444;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word;
+    font-weight: 500;
+}
+
+.matt-line:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: -10px;
+    top: 0;
+    width: 0;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #444 transparent;
+}
+
+#message:before, #message:after{
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.first{
+    background-color: #e5eaec;
+    color: #222;
+    font-size: .85em;
+    border-radius: 10px;
+    position: relative;
+    padding: 10px;
+    margin: 1% 0;
+    max-width: 100%;
+    min-width: 100%;
+    float: right;
+    word-wrap: break-word;
+    clear: both;
+    animation: scaler 150ms ease-out;
+    font-weight: 500;
+}
+
+#message .first:after{
+    content: "";
+    display: block;
+    position: absolute;
+    right: -10px;
+    top: 0;
+    width: 0;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #e5eaec transparent;
+}
+
+
+.reply{
+    padding: 15px 0;
+    background-color: #f5f8f9;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.reply:before, .reply:after{
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.material-icons, input, button{
+    float: left;
+    margin: 3px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 0;
+    flex: 1 1 0;
+}
+
+
+.material-icons{
+    color: #444;
+    font-size: 1.8em;
+    padding-top: 10px;
+    transform: rotate(-60deg);
+    cursor: pointer;
+}
+
+input{
+    width: calc(100% - 190px);
+    padding: 10px;
+    border: 1px solid;
+    font-size: 1.2em;
+    background-color: inherit;
+}
+
+input:focus, button:focus{
+    outline: 0;
+}
+.cancel {
+    margin-left: 20px;
+    /*width: 150px;*/
+    /*margin-left: 20px !important;*/
+    /*float: right;*/
+    /*margin-right: 20px;*/
+    /*padding: 9px 12px !important;*/
+}
+.desc{
+    white-space: nowrap;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/*button{*/
+    /*!*background-color: #222;*!*/
+    /*color: #fff;*/
+    /*padding: 15px 10px;*/
+    /*width: 20%;*/
+    /*vertical-align: middle;*/
+    /*border: none;*/
+    /*cursor: pointer;*/
+    /*letter-spacing: 1.2px;*/
+/*}*/
+
+.scroll{
+    position: absolute;
+    bottom: 0;
+}
+
+
+
+
+@keyframes scaler{
+    0%{transform: scale(0)}
+    100%{transform: scale(1)}
+}
+.form{
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.panel-heading {
+    padding: 32px 15px !important;
+}
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: black !important;
+    border-color: #428bca;
+}
+.userList{
+    padding-left: 30px !important;
+    cursor: pointer;
+}
