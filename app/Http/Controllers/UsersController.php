@@ -46,10 +46,10 @@ class UsersController extends Controller
     }
     public function add_store (Request $request){
         $this->validate($request,[
-            'name' => 'required',
-            'email' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
             'role'=>'required',
-            'password'=>'required',
         ]);
 
         $user=new User([

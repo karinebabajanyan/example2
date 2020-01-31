@@ -19,6 +19,7 @@ class ForgotPasswordController extends Controller
     */
 
     use \BeyondCode\EmailConfirmation\Traits\SendsPasswordResetEmails;
+//    use SendsPasswordResetEmails;
 
     /**
      * Create a new controller instance.

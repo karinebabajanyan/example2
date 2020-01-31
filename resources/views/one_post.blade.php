@@ -13,6 +13,14 @@
                 </div>
                 <p>
                     <a href="{{route('posts')}}" class="btn btn-info">Back</a>
+                    @can('isAdmin')
+                        <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                    @else
+                        @can('delete', $post)
+                            <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                        @endcan
+                    @endcan
+
                 </p>
             </div>
         </div>

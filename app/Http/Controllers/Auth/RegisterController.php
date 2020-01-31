@@ -21,6 +21,7 @@ class RegisterController extends Controller
     */
 
     use \BeyondCode\EmailConfirmation\Traits\RegistersUsers;
+//    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.

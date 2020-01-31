@@ -19,6 +19,7 @@ class LoginController extends Controller
     */
 
     use \BeyondCode\EmailConfirmation\Traits\AuthenticatesUsers;
+//    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.

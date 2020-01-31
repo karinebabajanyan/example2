@@ -8,19 +8,19 @@
             <div class="main-box no-header clearfix">
                 <div class="main-box-body clearfix">
                     <div class="table-responsive">
-                        @if($auth->role=='Admin')
+                        @can('isAdmin')
                             <a href="{{route('add_user')}}" class="btn btn-light">Add</a>
-                        @endif
+                        @endcan
                         <table class="table user-list">
                             <thead>
                             <tr>
                                 <th><span>User</span></th>
                                 <th><span>Email</span></th>
                                 <th><span>Role</span></th>
-                                @if($auth->role=='Admin')
+                                @can('isAdmin')
                                     <th><span>Edit</span></th>
                                     <th><span>Delete</span></th>
-                                @endif
+                                @endcan
                             </tr>
                             </thead>
                             <tbody>
@@ -36,39 +36,17 @@
                                         <td>
                                             <span>{{$v->role}}</span>
                                         </td>
-                                        @if($auth->role=='Admin')
+                                        @can('isAdmin')
                                             <td>
                                                 <a href="{{route('edit_user' , ['id' => $v->id])}}" class="btn btn-secondary">Edit</a>
                                             </td>
                                             <td>
                                                 <a href="{{route('delete_user',['id' => $v->id])}}" class="btn btn-dark">Delete</a>
                                             </td>
-                                        @endif
+                                        @endcan
                                     </tr>
                                 @endif
                             @endforeach
-                            {{--<tr>--}}
-                                {{--<td>--}}
-                                    {{--<span class="user-subhead">Name2</span>--}}
-                                {{--</td>--}}
-                                {{--<td>--}}
-                                    {{--<a href="#">marlon@brando.com</a>--}}
-                                {{--</td>--}}
-                                {{--<td>--}}
-
-                                {{--</td>--}}
-                            {{--</tr>--}}
-                            {{--<tr>--}}
-                                {{--<td>--}}
-                                    {{--<span class="user-subhead">Name3</span>--}}
-                                {{--</td>--}}
-                                {{--<td>--}}
-                                    {{--<a href="#">marlon@brando.com</a>--}}
-                                {{--</td>--}}
-                                {{--<td>--}}
-
-                                {{--</td>--}}
-                            {{--</tr>--}}
                             </tbody>
                         </table>
                     </div>

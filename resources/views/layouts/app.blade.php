@@ -84,6 +84,13 @@
                                             Messages
                                         </a>
                                     </li>
+                                    @can('isAdmin')
+                                        <li>
+                                            <a href="{{route('show_hidden_posts')}}">
+                                                Soft Deleted Posts
+                                            </a>
+                                        </li>
+                                    @endcan
                                     <li>
                                         <a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
