@@ -20,10 +20,20 @@
                             <div class="media-body">
                                 <h4 class="media-heading">{{$post->title}}</h4>
                                 <p class="desc">{{$post->description}}</p>
+                                <p>
+                                    <a href="{{route('one_post',['id' => $post->id,'title'=>$post->title])}}">See More</a>
+                                </p>
+                                <p>
+                                    @can('isAdmin')
+                                        <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                    @else
+                                        @can('delete', $post)
+                                            <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                        @endcan
+                                    @endcan
+
+                                </p>
                             </div>
-                            <p>
-                                <a href="{{route('one_post',['id' => $post->id,'title'=>$post->title])}}">See More</a>
-                            </p>
                         </div>
                     </div>
                 @endforeach
@@ -38,10 +48,20 @@
                             <div class="media-body">
                                 <h4 class="media-heading">{{$post->title}}</h4>
                                 <p class="desc">{{$post->description}}</p>
+                                <p>
+                                    <a href="{{route('one_post',['id' => $post->id,'title'=>$post->title])}}">See More</a>
+                                </p>
+                                <p>
+                                    @can('isAdmin')
+                                        <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                    @else
+                                        @can('delete', $post)
+                                            <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                        @endcan
+                                    @endcan
+
+                                </p>
                             </div>
-                            <p>
-                                <a href="{{route('one_post',['id' => $post->id,'title'=>$post->title])}}">See More</a>
-                            </p>
                         </div>
                     </div>
                 @endforeach

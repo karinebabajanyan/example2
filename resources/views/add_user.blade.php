@@ -37,8 +37,10 @@
             <label for="role" class="col-md-4 control-label">Role</label>
 
             <div class="col-md-6">
-                <input id="role" type="role" class="form-control" name="role" value="{{ old('role') }}" required>
-
+                <select id="role" class="form-control" name="role" required>
+                    <option value="Admin">Admin</option>
+                    <option value="User" selected>User</option>
+                </select>
                 @if ($errors->has('role'))
                     <span class="help-block">
                                         <strong>{{ $errors->first('role') }}</strong>

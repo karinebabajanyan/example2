@@ -25,7 +25,6 @@
                             </thead>
                             <tbody>
                             @foreach($users as $k=>$v)
-                                @if($v->id!=$auth->id)
                                     <tr>
                                         <td>
                                             <span class="user-subhead">{{$v->name}}</span>
@@ -40,12 +39,13 @@
                                             <td>
                                                 <a href="{{route('edit_user' , ['id' => $v->id])}}" class="btn btn-secondary">Edit</a>
                                             </td>
+                                        @if($v->role!=="Admin")
                                             <td>
                                                 <a href="{{route('delete_user',['id' => $v->id])}}" class="btn btn-dark">Delete</a>
                                             </td>
+                                        @endif
                                         @endcan
                                     </tr>
-                                @endif
                             @endforeach
                             </tbody>
                         </table>

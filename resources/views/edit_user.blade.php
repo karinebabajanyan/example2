@@ -36,7 +36,14 @@
                 <label for="role" class="col-md-4 control-label">Role</label>
 
                 <div class="col-md-6">
-                    <input id="role" type="text" class="form-control" name="role" value="{{$user->role}}" required>
+                    <select id="role" class="form-control" name="role" required>
+                        <option value="Admin">{{ $user->role }}</option>
+                       @if(($user->role)==='Admin')
+                            <option value="User">User</option>
+                        @else
+                            <option value="Admin">Admin</option>
+                        @endif
+                    </select>
 
                     @if ($errors->has('role'))
                         <span class="help-block">

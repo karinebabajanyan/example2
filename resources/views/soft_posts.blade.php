@@ -12,9 +12,15 @@
                         <h4 class="media-heading">{{$post->title}}</h4>
                         <p class="desc">{{$post->description}}</p>
                     </div>
+                    @if(($post->users))
                     <div class="text-right">
                         {{$post->users->name}}
                     </div>
+                        @else
+                        <div class="text-right">
+                           Deleted User
+                        </div>
+                    @endif
                 </div>
             </div>
         @endforeach

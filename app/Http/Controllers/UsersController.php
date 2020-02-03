@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
@@ -25,7 +26,12 @@ class UsersController extends Controller
         return view('edit_user',['user'=>$user]);
     }
     public function delete(Request $request){
-        User::where('id',$request->id)->delete();
+        $user=User::where('id',$request->id)->first();
+        if($user->delete()){
+           foreach ($user->posts->all() as $key=>$post){
+               $post->delete();
+            }
+        }
         return redirect('users');
     }
     public function add(){
@@ -51,12 +57,12 @@ class UsersController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'role'=>'required',
         ]);
-
         $user=new User([
             'name'=>$request->get('name'),
             'email'=>$request->get('email'),
             'role'=>$request->get('role'),
             'password'=>bcrypt($request->get('password')),
+            'confirmed_at'=>date("Y-m-d h:i:s", time()),
         ]);
         $user->save();
         return redirect('users');
