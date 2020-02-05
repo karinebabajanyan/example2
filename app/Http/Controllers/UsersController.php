@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\User;
+use App\SocialIdentity;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -27,9 +28,17 @@ class UsersController extends Controller
     }
     public function delete(Request $request){
         $user=User::where('id',$request->id)->first();
-        if($user->delete()){
-           foreach ($user->posts->all() as $key=>$post){
-               $post->delete();
+        $social=SocialIdentity::where('user_id',$request->id)->first();
+        if ($user->delete()) {
+            if($social->delete()) {
+                if(file_exists(public_path($user->image))){
+                    unlink(public_path($user->image));
+                }else{
+                    dd('File does not exists.');
+                }
+                foreach ($user->posts->all() as $key => $post) {
+                    $post->delete();
+                }
             }
         }
         return redirect('users');

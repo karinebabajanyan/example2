@@ -28,4 +28,26 @@ class HomeController extends Controller
         $user = Auth::user();
         return view('home',['user'=>$user]);
     }
+
+    public function fileUpload(Request $request)
+    {
+        $this->validate($request, ['image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',]);
+
+        $image = $request->file('image');
+        $new_name = rand().'.'.$image->getClientOriginalExtension();
+        $destinationPath = public_path('/images');
+        $image->move($destinationPath, $new_name);
+        //database
+//        if (Auth::check())
+//        {
+//            /**
+//             * Послепроверкиужеможешьполучатьлюбоесвойствомодели
+//             * пользователячерезфасад Auth, например id
+//             */
+//        }
+        $user = Auth::user();
+        //            dump($id);}
+       $user->update(["image" => '/images/'.$new_name]);
+        return back()->with('success','Image Upload successful')->with('path',$new_name);
+    }
 }

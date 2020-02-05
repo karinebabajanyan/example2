@@ -10,17 +10,22 @@
 
     <title>Chat App</title>
 
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="{{ asset('css/chat.css') }}" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link src="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
     <script>
         var base_url = '{{ url("/chat_page") }}';
     </script>
@@ -65,13 +70,13 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{route('home')}}">
-                                            Home
+                                        <a href="{{route('users')}}">
+                                            Users List
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{route('users')}}">
-                                            Users List
+                                        <a href="{{route('profile')}}">
+                                            Profile
                                         </a>
                                     </li>
                                     <li>
@@ -119,9 +124,8 @@
         <source src="{{ asset('sound/facebook_chat.mp3') }}" />
     </audio>
     @yield('script')
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="{{ asset('js/imageUpload.js') }}"></script>
+<script src="{{ asset('js/avatar.js') }}"></script>
 {{--<script src="{{ asset('js/app.js') }}"></script>--}}
 
 </body>

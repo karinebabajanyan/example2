@@ -55,6 +55,21 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Or Login With</label>
+                            <div class="col-md-6 col-md-offset-4">
+                                <a href="{{url('login/facebook')}}" class="btn btn-primary social">
+                                    <span class="fa fa-facebook"> Login With Facebook </span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <a href="{{url('login/github')}}"class="btn btn-default social">
+                                    <span class="fa fa-github"> Login With GitHub </span>
+                                </a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

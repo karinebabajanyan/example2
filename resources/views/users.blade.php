@@ -41,8 +41,22 @@
                                             </td>
                                         @if($v->role!=="Admin")
                                             <td>
-                                                <a href="{{route('delete_user',['id' => $v->id])}}" class="btn btn-dark">Delete</a>
+                                                <a  class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
                                             </td>
+{{--//href="{{route('delete_user',['id' => $v->id])}}"--}}
+                                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
+                                                            </div>
+                                                            <div class="modal-body modal-footer">
+                                                                <a href="{{route('delete_user',['id' => $v->id])}}" class="btn btn-primary">Yes</a>
+                                                                <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                         @endif
                                         @endcan
                                     </tr>

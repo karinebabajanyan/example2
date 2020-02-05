@@ -25,14 +25,26 @@
                                 </p>
                                 <p>
                                     @can('isAdmin')
-                                        <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                            <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Delete</a>
                                     @else
                                         @can('delete', $post)
-                                            <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                                <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Delete</a>
                                         @endcan
                                     @endcan
-
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
+                                </div>
+                                <div class="modal-body modal-footer">
+                                    <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-primary">Yes</a>
+                                    <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,14 +65,27 @@
                                 </p>
                                 <p>
                                     @can('isAdmin')
-                                        <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                        <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Delete</a>
                                     @else
                                         @can('delete', $post)
-                                            <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-danger">Delete</a>
+                                            <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Delete</a>
                                         @endcan
                                     @endcan
 
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
+                                </div>
+                                <div class="modal-body modal-footer">
+                                    <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-primary">Yes</a>
+                                    <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
+                                </div>
                             </div>
                         </div>
                     </div>
