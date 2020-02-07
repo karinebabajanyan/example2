@@ -21,7 +21,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
+    {{--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>--}}
+    {{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>--}}
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
@@ -124,7 +127,10 @@
         <source src="{{ asset('sound/facebook_chat.mp3') }}" />
     </audio>
     @yield('script')
-<script src="{{ asset('js/imageUpload.js') }}"></script>
+{{--<script src="http://code.jquery.com/jquery-3.3.1.min.js"--}}
+        {{--integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="--}}
+        {{--crossorigin="anonymous">--}}
+{{--</script>--}}
 <script src="{{ asset('js/avatar.js') }}"></script>
 {{--<script src="{{ asset('js/app.js') }}"></script>--}}
 
