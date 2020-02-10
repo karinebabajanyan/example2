@@ -19,14 +19,14 @@
                                     <div class="carousel-inner">
 
                                             @foreach($post->images as $k=>$image)
-                                                @if($k===0)
+                                                @if($image->is_check===1)
                                                 <div class="item active">
-                                                    <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                                    <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
                                                     {{--<img class="media-object" src="photos/{{$image->image_upload}}">--}}
                                                 </div>
                                                 @else
                                                 <div class="item">
-                                                    <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                                    <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
                                                 </div>
                                                 @endif
                                             @endforeach
@@ -51,9 +51,11 @@
                                 </p>
                                 <p>
                                     @can('isAdmin')
+                                            <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                                             <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Delete</a>
                                     @else
                                         @can('delete', $post)
+                                                <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                                                 <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Delete</a>
                                         @endcan
                                     @endcan
@@ -85,19 +87,18 @@
                                 <div class="carousel-inner">
 
                                     @foreach($post->images as $key=>$image)
-                                        @if($key===0)
+                                        @if($image->is_check===1)
                                             <div class="item active">
-                                                <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                                <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
                                                 {{--<img class="media-object" src="photos/{{$image->image_upload}}">--}}
                                             </div>
                                         @else
                                             <div class="item">
-                                                <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                                <img src="photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
                                             </div>
                                         @endif
                                     @endforeach
                                 </div>
-
                                 <!-- Left and right controls -->
                                 <a class="left carousel-control" href="#myCarousel2" data-slide="prev">
                                     <span class="glyphicon glyphicon-chevron-left"></span>
@@ -121,9 +122,11 @@
                                 </p>
                                 <p>
                                     @can('isAdmin')
+                                        <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                                         <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Delete</a>
                                     @else
                                         @can('delete', $post)
+                                            <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                                             <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Delete</a>
                                         @endcan
                                     @endcan

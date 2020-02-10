@@ -51,13 +51,13 @@ class FileList {
                             removeIcon = document.createTextNode('x'),
                             checkImage=document.createElement('input');
                         newInput.type = "file";
-                        newInput.name = "newfile[]";
+                        newInput.name = "files[newfile][]";
                         newInput.style.display="none";
                         checkImage.type='radio';
                         checkImage.name='images';
                         checkImage.value= photoUpload.files[i].name;
                         checkImage.id= 'images'+j;
-                        if(j===1){
+                        if(j===1 && imgUploadPreview.childElementCount === 0){
                             checkImage.checked=true;
                             ischeck=0;
                         }
@@ -66,6 +66,7 @@ class FileList {
                         previewImage.style.backgroundImage='url('+reader.result+')';
                         if($.inArray(text,arr1)===-1){
                             newInput.files = new FileList(photoUpload.files[i]);
+                            console.log(newInput.files)
                             removeImage.appendChild(removeIcon);
                             previewImageBox.appendChild(checkImage);
                             previewImageBox.appendChild(previewImage);
@@ -79,10 +80,22 @@ class FileList {
 
                         // confirm remove item
                         function removeItem(e) {
-                            // let index=$(this).parent().next().siblings("input[type*='radio']");
-                            let radio=$(this).parent().next().children("input[type=radio]");
-                            e.target.parentElement.remove();
-                            radio.attr('checked', 'checked');
+                            let index=arr1.length;
+                            if(imgUploadPreview.childElementCount !== 1){
+                                let radio=$(this).parent().next().children("input[type=radio]");
+                                let this_radio=$(this).parent().children("input[type=radio]");
+                                // let emement = $(this).parent().children("input[type=radio]").val();
+                                for (var i=0;i<index;i++){
+                                    if(arr1[i]== this_radio.val()){
+                                        arr1.splice(i, 1);
+                                        if(this_radio.is(':checked')) {
+                                            radio.attr('checked', 'checked');
+                                        }
+                                        e.target.parentElement.remove();
+                                    }
+                                }
+
+                            }
                         }
                         function checkedItem(e) {
                             ischeck=$(this).parent().index()
@@ -96,3 +109,33 @@ class FileList {
 
         }
     }
+
+$(".deleteItem").click(function(e){
+    let id=$(this).parent().children("input[type=radio]").val();
+    var that=e.target.parentElement;
+    let radio=$(this).parent().next().children("input[type=radio]");
+    let radio1=$(this).parent().parent().children().eq(0).children("input[type=radio]");
+    let token = $('meta[name="csrf-token"]').attr('content')
+    if(imgUploadPreview.childElementCount !== 1) {
+        $.ajax({
+            url: "/delete_image",
+            type: 'post',
+            data: {_token: token, id: id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (result) {
+                if (result == 1) {
+                    that.remove();
+                    if(radio.length==0){
+                        radio1.attr('checked', 'checked');
+                    }else{
+                        radio.attr('checked', 'checked');
+                    }
+                } else if (result == 2) {
+                    that.remove();
+                }
+            }
+        });
+    }
+});

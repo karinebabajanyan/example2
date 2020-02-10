@@ -48,7 +48,10 @@ Route::get('/show_hidden_posts','PostsController@show_hidden_posts')->name('show
 Route::get('/one_post/{title}/{id}', 'PostsController@one_post')->name('one_post');
 Route::get('/create_post', 'PostsController@create')->name('create_post');
 Route::post('/save_post', 'PostsController@save')->name('save_post');
+Route::post('/update_post', 'PostsController@update')->name('update_post');
 Route::get('delete_post/{id}','PostsController@delete')->name('delete');
+Route::get('edit_post/{id}','PostsController@edit')->name('edit');
+Route::post('/delete_image','PostsController@delete_image')->name('delete_image');
 
 
 Auth::routes();

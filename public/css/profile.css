@@ -384,8 +384,11 @@ div.text-right {
     font-size: 30px;
     width: 200px;
 }
-#myCarousel1, #myCarousel2, #myCarousel{
+.carousel{
     float: left;
     width: 200px;
     margin-right: 20px;
+}
+.item{
+    height: 150px;
 }

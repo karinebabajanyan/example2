@@ -9,14 +9,14 @@
                     <div class="carousel-inner">
 
                         @foreach($images as $k=>$image)
-                            @if($k===0)
+                            @if($image->is_check===1)
                                 <div class="item active">
-                                    <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                    <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
                                     {{--<img class="media-object" src="photos/{{$image->image_upload}}">--}}
                                 </div>
                             @else
                                 <div class="item">
-                                    <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                    <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
                                 </div>
                             @endif
                         @endforeach
@@ -43,9 +43,11 @@
                     <a href="{{route('posts')}}" class="btn btn-info">Back</a>
                     {{--href="{{route('delete',['id' => $post->id])}}"--}}
                     @can('isAdmin')
+                        <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                         <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
                     @else
                         @can('delete', $post)
+                            <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                             <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
                         @endcan
                     @endcan
