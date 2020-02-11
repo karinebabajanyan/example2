@@ -11,7 +11,7 @@
                                 <div class="upload-button">
                                     <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                 </div>
-                                <form method="post" action="{{url('/profile')}}"  id="FrmImgUpload" enctype="multipart/form-data">
+                                <form method="post" action="{{route('profiles.index')}}"  id="FrmImgUpload" enctype="multipart/form-data">
                                     {{ csrf_field() }}
                                     <input class="file-upload" type="file" onchange="this.form.submit()" name="image" accept="image/*">
                                 </form>

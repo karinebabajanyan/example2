@@ -12,7 +12,6 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link rel="stylesheet" href="{{ asset('css/chat.css') }}" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
@@ -28,10 +27,6 @@
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-
-    <script>
-        var base_url = '{{ url("/chat_page") }}';
-    </script>
 </head>
 <body>
 <div id="app">
@@ -73,28 +68,23 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{route('users')}}">
-                                            Users List
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('profile')}}">
+                                        <a href="{{route('profiles.index')}}">
                                             Profile
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{route('posts')}}">
-                                            Posts
+                                        <a href="{{route('users.index')}}">
+                                            Users List
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{route('chat_page')}}">
-                                            Messages
+                                        <a href="{{route('posts.index')}}">
+                                            Posts
                                         </a>
                                     </li>
                                     @can('isAdmin')
                                         <li>
-                                            <a href="{{route('show_hidden_posts')}}">
+                                            <a href="{{route('posts.soft-deleted-posts')}}">
                                                 Soft Deleted Posts
                                             </a>
                                         </li>
@@ -120,17 +110,7 @@
 
     @yield('content')
 </div>
-
-<div id="chat-overlay" class="row"></div>
-
-    <audio id="chat-alert-sound" style="display: none">
-        <source src="{{ asset('sound/facebook_chat.mp3') }}" />
-    </audio>
     @yield('script')
-{{--<script src="http://code.jquery.com/jquery-3.3.1.min.js"--}}
-        {{--integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="--}}
-        {{--crossorigin="anonymous">--}}
-{{--</script>--}}
 <script src="{{ asset('js/avatar.js') }}"></script>
 {{--<script src="{{ asset('js/app.js') }}"></script>--}}
 

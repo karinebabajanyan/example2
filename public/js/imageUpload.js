@@ -118,7 +118,7 @@ $(".deleteItem").click(function(e){
     let token = $('meta[name="csrf-token"]').attr('content')
     if(imgUploadPreview.childElementCount !== 1) {
         $.ajax({
-            url: "/delete_image",
+            url: "/delete-image",
             type: 'post',
             data: {_token: token, id: id},
             headers: {

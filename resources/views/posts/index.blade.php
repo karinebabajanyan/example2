@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <p>
-            <a href="{{route('create_post')}}" class="btn btn-default">Add New Post</a>
+            <a href="{{route('posts.create')}}" class="btn btn-default">Add New Post</a>
         </p>
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#all">All Posts</a></li>
@@ -47,32 +47,8 @@
                                 <h4 class="media-heading">{{$post->title}}</h4>
                                 <p class="desc">{{$post->description}}</p>
                                 <p>
-                                    <a href="{{route('one_post',['id' => $post->id,'title'=>$post->title])}}">See More</a>
+                                    <a href="{{route('posts.show',['id' => $post->id])}}">See More</a>
                                 </p>
-                                <p>
-                                    @can('isAdmin')
-                                            <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
-                                            <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Delete</a>
-                                    @else
-                                        @can('delete', $post)
-                                                <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
-                                                <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter1">Delete</a>
-                                        @endcan
-                                    @endcan
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
-                                </div>
-                                <div class="modal-body modal-footer">
-                                    <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-primary">Yes</a>
-                                    <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,45 +85,16 @@
                                     <span class="sr-only">Next</span>
                                 </a>
                             </div>
-                            {{--<a class="pull-left" href="#">--}}
-                                {{--@foreach($post->images as $key=>$image)--}}
-                                    {{--<img class="media-object" src="photos/{{$image->image_upload}}">--}}
-                                {{--@endforeach--}}
-                            {{--</a>--}}
                             <div class="media-body">
                                 <h4 class="media-heading">{{$post->title}}</h4>
                                 <p class="desc">{{$post->description}}</p>
                                 <p>
-                                    <a href="{{route('one_post',['id' => $post->id,'title'=>$post->title])}}">See More</a>
-                                </p>
-                                <p>
-                                    @can('isAdmin')
-                                        <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
-                                        <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Delete</a>
-                                    @else
-                                        @can('delete', $post)
-                                            <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
-                                            <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter2">Delete</a>
-                                        @endcan
-                                    @endcan
-
+                                    <a href="{{route('posts.show',['id' => $post->id,'title'=>$post->title])}}">See More</a>
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
-                                </div>
-                                <div class="modal-body modal-footer">
-                                    <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-primary">Yes</a>
-                                    <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 @endforeach
             </div>
         </div>

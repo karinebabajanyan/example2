@@ -9,7 +9,7 @@
                 <div class="main-box-body clearfix">
                     <div class="table-responsive">
                         @can('isAdmin')
-                            <a href="{{route('add_user')}}" class="btn btn-light">Add</a>
+                            <a href="{{route('users.create')}}" class="btn btn-light">Add</a>
                         @endcan
                         <table class="table user-list">
                             <thead>
@@ -37,23 +37,26 @@
                                         </td>
                                         @can('isAdmin')
                                             <td>
-                                                <a href="{{route('edit_user' , ['id' => $v->id])}}" class="btn btn-secondary">Edit</a>
+                                                <a href="{{route('users.edit' , ['id' => $v->id])}}" class="btn btn-secondary">Edit</a>
                                             </td>
-                                        @if($v->role!=="Admin")
+                                        @if($v->id!==$auth->id)
                                             <td>
-                                                <a  class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
+                                                <a  class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter{{$v->id}}">Delete</a>
                                             </td>
-{{--//href="{{route('delete_user',['id' => $v->id])}}"--}}
-                                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal fade" id="exampleModalCenter{{$v->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
-                                                            <div class="modal-body">
-                                                                <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
-                                                            </div>
-                                                            <div class="modal-body modal-footer">
-                                                                <a href="{{route('delete_user',['id' => $v->id])}}" class="btn btn-primary">Yes</a>
-                                                                <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
-                                                            </div>
+                                                            <form action="{{ route('users.destroy',['id' => $v->id]) }}"  method="POST">
+                                                                {{ csrf_field() }}
+                                                                {{ method_field('DELETE') }}
+                                                                <div class="modal-body">
+                                                                    <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
+                                                                </div>
+                                                                <div class="modal-body modal-footer">
+                                                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>

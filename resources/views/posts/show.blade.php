@@ -40,14 +40,14 @@
                     <p>{{$post->description}}</p>
                 </div>
                 <p>
-                    <a href="{{route('posts')}}" class="btn btn-info">Back</a>
+                    <a href="{{route('posts.index')}}" class="btn btn-info">Back</a>
                     {{--href="{{route('delete',['id' => $post->id])}}"--}}
                     @can('isAdmin')
-                        <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
+                        <a href="{{route('posts.edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                         <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
                     @else
                         @can('delete', $post)
-                            <a href="{{route('edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
+                            <a href="{{route('posts.edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
                             <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
                         @endcan
                     @endcan
@@ -58,8 +58,12 @@
                                     <h5 class="modal-title" id="exampleModalLongTitle">Are You Sure?</h5>
                                 </div>
                                 <div class="modal-body modal-footer">
-                                    <a href="{{route('delete',['id' => $post->id])}}" class="btn btn-primary">Yes</a>
-                                    <a type="button" class="btn btn-secondary" data-dismiss="modal">No</a>
+                                    <form action="{{route('posts.destroy',['id' => $post->id])}}"  method="POST">
+                                        {{ csrf_field() }}
+                                        {{ method_field('DELETE') }}
+                                        <button type="submit" class="btn btn-primary">Yes</button>
+                                    </form>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                 </div>
                             </div>
                         </div>

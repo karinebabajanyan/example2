@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="panel-body">
-        <form class="form-horizontal" method="POST" action="{{ route('store') }}">
+        <form class="form-horizontal" method="POST" action="{{ route('users.update',['id'=>$user->id]) }}">
             {{ csrf_field() }}
-
+            {{ method_field('PATCH') }}
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name" class="col-md-4 control-label">Name</label>
                 <div class="col-md-6">
@@ -12,12 +12,11 @@
 
                     @if ($errors->has('name'))
                         <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
+                            <strong>{{ $errors->first('name') }}</strong>
+                        </span>
                     @endif
                 </div>
             </div>
-            <input type="hidden" name="id" value="{{$user->id}}">
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                 <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
@@ -26,8 +25,8 @@
 
                     @if ($errors->has('email'))
                         <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
                     @endif
                 </div>
             </div>
@@ -37,18 +36,19 @@
 
                 <div class="col-md-6">
                     <select id="role" class="form-control" name="role" required>
-                        <option value="Admin">{{ $user->role }}</option>
                        @if(($user->role)==='Admin')
+                            <option value="{{ $user->role }}" selected>{{ $user->role }}</option>
                             <option value="User">User</option>
                         @else
+                            <option value="{{ $user->role }}" selected>{{ $user->role }}</option>
                             <option value="Admin">Admin</option>
                         @endif
                     </select>
 
                     @if ($errors->has('role'))
                         <span class="help-block">
-                                        <strong>{{ $errors->first('role') }}</strong>
-                                    </span>
+                            <strong>{{ $errors->first('role') }}</strong>
+                        </span>
                     @endif
                 </div>
             </div>
