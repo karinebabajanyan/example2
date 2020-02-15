@@ -8,6 +8,9 @@
             <div class="main-box no-header clearfix">
                 <div class="main-box-body clearfix">
                     <div class="table-responsive">
+                        @if($errors->any())
+                            <h4 style="color: #761c19">{{$errors->first()}}</h4>
+                        @endif
                         @can('isAdmin')
                             <a href="{{route('users.create')}}" class="btn btn-light">Add</a>
                         @endcan
@@ -60,6 +63,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                        @else
+                                                <td></td>
                                         @endif
                                         @endcan
                                     </tr>

@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Services\FileService;
 use Auth;
 use App\Post;
-use App\Image;
+use App\File;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\Posts\PostStoreRequest;
+use App\Http\Requests\Posts\PostUpdateRequest;
+use App\Http\Requests\Posts\PostEditRequest;
+use App\Http\Requests\Posts\PostShowRequest;
+use App\Http\Requests\Posts\PostDestroyRequest;
+use App\Http\Requests\Posts\PostDeleteImageRequest;
+use App\Http\Requests\Posts\PostSoftDeleteRequest;
 
 class PostController extends Controller
 {
@@ -17,9 +25,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
         $all = Post::all();
-        $my=$user->posts;
+        $my=Auth::user()->posts;
         return view('posts.index',['all_posts'=>$all,'my_posts'=>$my]);
     }
 
@@ -39,41 +46,20 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
-        $this->validate($request,[
-            'title' => 'required',
-            'files' => 'required',
-            'description'=>'required',
-        ]);
         $images = $request->all()['files']["newfile"];
-        $id = Auth::user()->id;
-        $post=new Post([
-            'title'=>$request->get('title'),
-            'description'=>$request->get('description'),
-            'user_id'=>$id,
-        ]);
-        $post->save();
-        foreach ($images as $key=>$image){
-            $input['imagename']=preg_replace('/[^\p{L}\p{N}\s]/u', '', bcrypt(time())).'.'.$image->getClientOriginalExtension();
-            $destinationPath=public_path('/photos');
-            $image->move($destinationPath,$input['imagename']);
-            if($image->getClientOriginalName()===$request->get('images')){
-                $image=new Image([
-                    'image_upload'=>$input['imagename'],
-                    'is_check'=>1,
-                    'post_id'=>$post->id,
-                ]);
-                $image->save();
-
-            }else{
-                $image=new Image([
-                    'image_upload'=>$input['imagename'],
-                    'is_check'=>0,
-                    'post_id'=>$post->id,
-                ]);
-                $image->save();
+        $directoryPath=FileService::makeDirectory('posts');
+        $id = auth()->id();
+        $postModel=new Post;
+        $request['user_id']=$id;
+        $post=Post::create($request->only($postModel->getFillable()));
+        foreach ($images as $key => $image) {
+            $category=null;
+            if($image->getClientOriginalName()===$request->get('images')) {
+                $category='checked';
             }
+            FileService::saveFile($image,$post->id,'posts',$directoryPath,$category);
         }
         return redirect('posts');
     }
@@ -84,11 +70,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,PostShowRequest $request)
     {
         $post=Post::where('id','=' ,$id)->first();
-        $images=$post->images;
-        return view('posts.show',['post'=>$post,'images'=>$images]);
+        return view('posts.show',['post'=>$post]);
     }
 
     /**
@@ -97,13 +82,13 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, PostEditRequest $request)
     {
-        if(Post::where('id','=' ,$id)->where('user_id',Auth::user()->id)->first() || Gate::allows('isAdmin')){
-            $post=Post::where('id','=' ,$id)->first();
-            return view('posts.edit',['post'=>$post,]);
-        }else{
-            return redirect('posts');
+        $post=Post::where('id','=' ,$id)->first();
+        if($post) {
+                return view('posts.edit',['post'=>$post,]);
+        } else {
+            return redirect('posts')->withErrors(["Post $id is not exists"]);
         }
     }
 
@@ -114,51 +99,33 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostUpdateRequest $request, $id)
     {
-        $this->validate($request,[
-            'title' => 'required',
-            'files' => 'required',
-            'description'=>'required',
-        ]);
-//        $id=$request->get('id');
-//        dd();
         Post::where('id',$id)->update([
             'title'=>$request->get('title'),
             'description'=>$request->get('description'),
         ]);
-        Image::where('post_id',$id)->where('is_check',1)->update([
-            'is_check'=>0,
-        ]);
-        if(isset($request->all()["files"]["newfile"])){
-            $images = $request->all()['files']["newfile"];
-            foreach ($images as $key=>$image){
-                $input['imagename']=preg_replace('/[^\p{L}\p{N}\s]/u', '', bcrypt(time())).'.'.$image->getClientOriginalExtension();
-//                dump($input['imagename']);
-                $destinationPath=public_path('/photos');
-                $image->move($destinationPath,$input['imagename']);
-                if($image->getClientOriginalName()===$request->get('images')){
-                    $image=new Image([
-                        'image_upload'=>$input['imagename'],
-                        'is_check'=>1,
-                        'post_id'=>$id,
-                    ]);
-                    $image->save();
 
-                }else{
-                    $image=new Image([
-                        'image_upload'=>$input['imagename'],
-                        'is_check'=>0,
-                        'post_id'=>$id,
-                    ]);
-                    $image->save();
+        File::where('fileable_id',$id)->where('fileable_type','posts')->where('category','checked')->update([
+            'category'=>NULL,
+        ]);
+
+        if(isset($request->all()["files"]["newfile"])) {
+            $images = $request->all()['files']["newfile"];
+            $directoryPath=FileService::makeDirectory('posts');
+            foreach ($images as $key => $image) {
+                $category = null;
+                if($image->getClientOriginalName() === $request->get('images')) {
+                    $category = 'checked';
                 }
+                FileService::saveFile($image,$id,'posts',$directoryPath,$category);
             }
         }
-        if(isset($request->all()["files"]["old_files"])){
+
+        if(isset($request->all()["files"]["old_files"])) {
             $img_id=(int)$request->get('images');
-            Image::where('id',$img_id)->update([
-                'is_check'=>1,
+            File::where('id',$img_id)->update([
+                'category'=>'checked',
             ]);
         }
         return redirect('posts');
@@ -170,21 +137,21 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id , PostDestroyRequest $request)
     {
-        if(Post::where('id','=' ,$id)->where('user_id',Auth::user()->id)->first() || Gate::allows('isAdmin')) {
             $post = Post::where('id', '=', $id)->first();
-            $images = $post->images;
-            if ($post != null && $images != null) {
-                $post->delete();
-                foreach ($images as $key => $image) {
-                    $image->delete();
+            if($post) {
+                $images = $post->files;
+                if($images) {
+                    $post->delete();
+                    foreach ($images as $key => $image) {
+                        $image->delete();
+                    }
                 }
+                return redirect('posts');
+            } else {
+                return redirect('posts')->withErrors(["Post $id is not exists"]);;
             }
-            return redirect('posts');
-        }else{
-            return redirect('posts');
-        }
     }
     /**
      * Remove the specified image from storage.
@@ -192,51 +159,40 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete_image(Request $request){
-        if($request->ajax()){
-            $id_image=$request->id;
-            $next_id=Image::where('id','>', $id_image)->orderBy('id')->take(1)->first();
-            $post_id=Image::where('id', $id_image)->first()->post_id;
-            $n_id=Image::where('post_id', $post_id)->first()->id;
-            $image1=Image::where('id', $id_image)->where('is_check',1)->first();
-            $image=Image::where('id', $id_image)->first();
-            if($image1){
-                if (Image::where('id', $id_image)->forcedelete()) {
-                    if($next_id){
-                        Image::where('id', $next_id->id)->update([
-                            'is_check' => 1,
-                        ]);
-                    }else{
-                        Image::where('id', $n_id)->update([
-                            'is_check' => 1,
-                        ]);
-                    }
-                    if(file_exists(public_path('photos/'.$image->image_upload))){
-                        unlink(public_path('photos/'.$image->image_upload));
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                }else{
-                    return 0;
-                }
-            }else{
-                if ($image->forcedelete()) {
-                    if(file_exists(public_path('photos/'.$image->image_upload))){
-                        unlink(public_path('photos/'.$image->image_upload));
-                        return 2;
-                    }else{
-                        return 0;
-                    }
-                }else{
-                    return 0;
-                }
-            }
+    public function deleteImage(PostDeleteImageRequest $request)
+    {
+        if ($request->ajax()) {
 
+            $id_image = $request->id;
+            $file = File::where('id', $id_image)->first();
+            $next = File::where('id', '>', $id_image)->where('fileable_type', 'posts')->orderBy('id')->take(1)->first();
+            $post_id = $file->where('fileable_type', 'posts')->first()->fileable_id;
+            if (!$next) {
+                $next = File::where('fileable_id', $post_id)->where('fileable_type', 'posts')->first();
+            }
+            $image1 = File::where('id', $id_image)->where('category', 'checked')->first();
+            if ($file->delete()) {
+                if ($image1) {
+                    File::where('id', $next->id)->update([
+                        'category' => 'checked',
+                    ]);
+                    return 1;
+                } else {
+                    return 2;
+                }
+            } else {
+                return 0;
+            }
         }
     }
 
-    public function soft_deleted_posts(){
+    /**
+     * Display the specified Soft Deleted resource.
+     *
+     * @param  PostSoftDeleteRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function softDeletedPosts(PostSoftDeleteRequest $request){
         $onlySoftDeleted = Post::onlyTrashed()->get();
         return view('posts.soft',['onlySoftDeleted'=>$onlySoftDeleted]);
     }

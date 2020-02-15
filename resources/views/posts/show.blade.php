@@ -2,21 +2,23 @@
 
 @section('content')
     <div class="container">
+        @if($errors->any())
+            <h4 style="color: #761c19">{{$errors->first()}}</h4>
+        @endif
         <div class="well">
             <div class="media">
                 <div id='myCarousel'  class="carousel slide" data-ride="carousel" style="max-width: 200px;">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
-
-                        @foreach($images as $k=>$image)
-                            @if($image->is_check===1)
+                        @foreach($post->files as $k=>$image)
+                            @if($image->category==='checked')
                                 <div class="item active">
-                                    <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
+                                    <img src="{{$image->path}}" class="media-object" style="width:100%;height: 100%">
                                     {{--<img class="media-object" src="photos/{{$image->image_upload}}">--}}
                                 </div>
                             @else
                                 <div class="item">
-                                    <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;height: 100%">
+                                    <img src="{{$image->path}}" class="media-object" style="width:100%;height: 100%">
                                 </div>
                             @endif
                         @endforeach

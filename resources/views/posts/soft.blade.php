@@ -12,12 +12,12 @@
                             @foreach($post->trashed_images as $k=>$image)
                                 @if($k===0)
                                     <div class="item active">
-                                        <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                        <img src="{{$image->path}}" class="media-object" style="width:100%;height: 100%">
                                         {{--<img class="media-object" src="photos/{{$image->image_upload}}">--}}
                                     </div>
                                 @else
                                     <div class="item">
-                                        <img src="../../photos/{{$image->image_upload}}" class="media-object" style="width:100%;">
+                                        <img src="{{$image->path}}" class="media-object" style="width:100%;height: 100%">
                                     </div>
                                 @endif
                             @endforeach

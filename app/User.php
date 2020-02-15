@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -15,7 +16,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'image','password', 'confirmed_at'
+        'name',
+        'email',
+        'password',
+        'confirmed_at'
     ];
 
     /**
@@ -24,16 +28,39 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
-    public function posts(){
-
+    /**
+     * Get the posts of the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
+    public function posts() {
         return $this->hasMany('App\Post','user_id', 'id');
     }
-    //$2y$10$uvyW7O.DfErmGX5F8KQ.SukF1wnCnTqI3gi0AuX3U/BZDIueupO1e
 
+    /**
+     * Get the posts of the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
     public function identities() {
         return $this->hasMany('App\SocialIdentity');
+    }
+
+    /**
+     * Get user's images.
+     */
+    public function files() {
+        return $this->morphMany('App\File', 'fileable');
+    }
+
+    /**
+     * Get user's cover photo.
+     */
+    public function cover_image() {
+        return $this->morphOne('App\File', 'fileable')->where('category', 'cover');
     }
 }

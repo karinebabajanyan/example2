@@ -19,9 +19,10 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', 'UserController');
     Route::resource('posts', 'PostController');
-    Route::resource('profiles', 'ProfileController');
-    Route::post('/delete-image','PostController@delete_image')->name('posts.delete-image');
-    Route::get('/soft-deleted-posts','PostController@soft_deleted_posts')->name('posts.soft-deleted-posts');
+    Route::get('/user','UserController@user')->name('users.user');
+    Route::post('/delete-image','PostController@deleteImage')->name('posts.delete-image');
+    Route::get('/soft-deleted-posts','PostController@softDeletedPosts')->name('posts.soft-deleted-posts');
+    Route::post('/users/update','UserController@updateProfileImage')->name('users.update-profile-image');
 });
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider');

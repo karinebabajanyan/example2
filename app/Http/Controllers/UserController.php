@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
+use App\Http\Services\FileService;
 use Auth;
 use App\User;
+use App\File;
 use App\SocialIdentity;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\Users\UserStoreRequest;
+use App\Http\Requests\Users\UserUpdateRequest;
+use App\Http\Requests\Users\UserUpdateProfileImageRequest;
+use App\Http\Requests\Users\UserCreateRequest;
+use App\Http\Requests\Users\UserEditRequest;
+use App\Http\Requests\Users\UserDestroyRequest;
+use App\Http\Requests\Users\UserShowRequest;
 
 
 class UserController extends Controller
@@ -28,7 +37,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(UserCreateRequest $request)
     {
         return view('users.create');
     }
@@ -39,34 +48,25 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $this->validate($request,[
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role'=>'required',
-        ]);
-        $user=new User([
-            'name'=>$request->get('name'),
-            'email'=>$request->get('email'),
-            'role'=>$request->get('role'),
-            'password'=>bcrypt($request->get('password')),
-            'confirmed_at'=>date("Y-m-d h:i:s", time()),
-        ]);
-        $user->save();
+        $postModel=new User;
+        $request['confirmed_at']=date("Y-m-d h:i:s", time());
+        User::create($request->only($postModel->getFillable()));
         return redirect('users');
     }
 
     /**
-     * Update the created resource in storage post method.
+     * Display the specified user.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  UserShowRequest $request
      * @return \Illuminate\Http\Response
      */
-//    public function update_user(Request $request){
-//
-//    }
+    public function user(UserShowRequest $request)
+    {
+        $user = Auth::user();
+         return view('users.show',['user'=>$user]);
+    }
 
     /**
      * Display the specified resource.
@@ -79,16 +79,22 @@ class UserController extends Controller
         //
     }
 
+
+
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id,UserEditRequest $request)
     {
         $user=User::where('id',$id)->first();
-        return view('users.edit',['user'=>$user]);
+        if($user){
+            return view('users.edit',['user'=>$user]);
+        }else{
+            return back()->withErrors(['User is not exists']);
+        }
     }
 
     /**
@@ -98,14 +104,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
-        $this->validate($request,[
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'role'=>'required',
-        ]);
-
         User::where('id',$id)->update([
             'name'=>$request->name,
             'email'=>$request->email,
@@ -120,20 +120,33 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, UserDestroyRequest $request)
     {
         $user = User::where('id', $id)->first();
-        if ($user || !(Gate::allows('isAdmin'))) {
-            $social = SocialIdentity::where('user_id', $id)->first();
+
+        if ($user) {
             if ($user->delete()) {
+                $social = SocialIdentity::where('user_id', $id)->first();
                 if ($social) {
-                    if ($social->delete()) {
-                        if (file_exists(public_path($user->image))) {
-                            unlink(public_path($user->image));
+                    $social->delete();
+                }
+                $avatar=$user->cover_image;
+                if($avatar){
+                    if (file_exists(public_path($avatar->path))) {
+                        unlink(public_path($avatar->path));
+                    }
+                    $avatar->delete();
+                }
+                $posts=$user->posts;
+                if($posts){
+                    foreach ($posts as $key => $post) {
+                        $images=$post->files;
+                        if($images){
+                            foreach ($images as $k => $image) {
+                                $image->delete();
+                            }
                         }
-                        foreach ($user->posts->all() as $key => $post) {
-                            $post->delete();
-                        }
+                        $post->delete();
                     }
                 }
             }
@@ -141,5 +154,28 @@ class UserController extends Controller
         }else{
             return redirect('users');
         }
+    }
+
+    /**
+     * Update the Profile Image in storage.
+     *
+     * @param  UserUpdateProfileImageRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfileImage(UserUpdateProfileImageRequest $request)
+    {
+        $image = $request->file('image');
+        $directoryPath=FileService::makeDirectory('users');
+        $id = Auth::user()->id;
+        $imageExists=File::where('fileable_id',$id)->where('fileable_type','users')->where('category','cover')->first();
+        if($imageExists){
+            if(file_exists(public_path($imageExists->path))){
+                unlink(public_path($imageExists->path));
+            }
+            FileService::updateImage($imageExists,$image,$directoryPath,'users');
+        }else{
+            FileService::saveFile($image,$id,'users',$directoryPath,'cover');
+        }
+        return back()->with('success','Image Upload successful');
     }
 }

@@ -125,6 +125,7 @@ $(".deleteItem").click(function(e){
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (result) {
+                console.log(result)
                 if (result == 1) {
                     that.remove();
                     if(radio.length==0){

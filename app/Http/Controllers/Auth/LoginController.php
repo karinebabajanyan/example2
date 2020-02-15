@@ -8,6 +8,7 @@ use Auth;
 use Socialite;
 Use App\User;
 use App\SocialIdentity;
+use App\File;
 
 class LoginController extends Controller
 {
@@ -23,7 +24,6 @@ class LoginController extends Controller
     */
 
     use \BeyondCode\EmailConfirmation\Traits\AuthenticatesUsers;
-//    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -41,6 +41,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    /**
+     * Redirect the user to the GitHub authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function redirectToProvider($provider)
     {
@@ -63,9 +68,13 @@ class LoginController extends Controller
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
         return redirect($this->redirectTo);
-        // $user->token;
     }
 
+    /**
+     * Create or Find user.
+     *
+     * @return $user
+     */
     public function findOrCreateUser($providerUser, $provider)
     {
         $account = SocialIdentity::whereProviderName($provider)
@@ -78,11 +87,16 @@ class LoginController extends Controller
             $user = User::whereEmail($providerUser->getEmail())->first();
 
             if (! $user) {
-//                dd($providerUser);
                 $user = User::create([
                     'email' => $providerUser->getEmail(),
                     'name'  => $providerUser->getNickname(),
-                    'image' => $providerUser->getAvatar(),
+                ]);
+                File::create([
+                    'fileable_id'=>$user->id,
+                    'fileable_type'=>'users',
+                    'original_name'=>$providerUser->getAvatar(),
+                    'category'=>'cover',
+                    'path'=>$providerUser->getAvatar(),
                 ]);
             }
 

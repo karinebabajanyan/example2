@@ -2,9 +2,8 @@
 
 @section('content')
     <div class="panel-body">
-        <form class="form-horizontal" method="POST" action="{{ route('users.store') }}">
+        <form method="post" class="form-horizontal" action="{{ route('users.store') }}">
             {{ csrf_field() }}
-
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name" class="col-md-4 control-label">Name</label>
 
