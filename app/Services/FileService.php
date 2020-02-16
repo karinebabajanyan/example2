@@ -6,7 +6,7 @@ use App\File;
 
 class FileService {
 
-
+    //files directory maker
     public static function makeDirectory($type){
         $directoryPathFiles=public_path('files');
         $directoryPath=$directoryPathFiles.'/'.$type;
@@ -16,6 +16,7 @@ class FileService {
         return $directoryPath;
     }
 
+    //Save post or user files in database
     public static function saveFile($image,$id, $type ,$directoryPath, $category){
         $new_name = mt_rand().'.'.$image->getClientOriginalExtension();
         File::create([
@@ -28,6 +29,7 @@ class FileService {
         $image->move($directoryPath, $new_name);
     }
 
+    //Update post or user files in database
     public static function updateImage($file, $image,$directoryPath, $type){
         $new_name = mt_rand().'.'.$image->getClientOriginalExtension();
         $file->update([

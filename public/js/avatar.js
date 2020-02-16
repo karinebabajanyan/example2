@@ -1,3 +1,4 @@
+//avatar upload
 $(document).ready(function() {
 
     var readURL = function(input) {
