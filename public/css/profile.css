@@ -207,6 +207,7 @@ div.text-right {
     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
     filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
+ /*Extras */
 .cc-selector-2 input{
     margin: 5px 0 0 12px;
 }
