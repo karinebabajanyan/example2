@@ -11,7 +11,7 @@
                         @if($errors->any())
                             <h4 style="color: #761c19">{{$errors->first()}}</h4>
                         @endif
-                        @can('isAdmin')
+                        @can('create',$auth)
                             <a href="{{route('users.create')}}" class="btn btn-light">Add</a>
                         @endcan
                         <table class="table user-list">
@@ -20,8 +20,10 @@
                                 <th><span>User</span></th>
                                 <th><span>Email</span></th>
                                 <th><span>Role</span></th>
-                                @can('isAdmin')
+                                @can('update',$auth)
                                     <th><span>Edit</span></th>
+                                @endcan
+                                @can('delete',$auth)
                                     <th><span>Delete</span></th>
                                 @endcan
                             </tr>
@@ -38,14 +40,17 @@
                                         <td>
                                             <span>{{$v->role}}</span>
                                         </td>
-                                        @can('isAdmin')
+                                        @can('update',$auth)
                                             <td>
                                                 <a href="{{route('users.edit' , ['id' => $v->id])}}" class="btn btn-secondary">Edit</a>
                                             </td>
+                                        @endcan
                                         @if($v->id!==$auth->id)
+                                            @can('delete',$auth)
                                             <td>
                                                 <a  class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter{{$v->id}}">Delete</a>
                                             </td>
+                                            @endcan
                                                 <div class="modal fade" id="exampleModalCenter{{$v->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
@@ -66,7 +71,6 @@
                                         @else
                                                 <td></td>
                                         @endif
-                                        @endcan
                                     </tr>
                             @endforeach
                             </tbody>

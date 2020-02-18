@@ -63,4 +63,15 @@ class User extends Authenticatable
     public function cover_image() {
         return $this->morphOne('App\File', 'fileable')->where('category', 'cover');
     }
+
+    /**
+     * defines user admin or not
+     * @return bool
+     */
+    public function isAdmin(){
+        if($this->role=="Admin"){
+                return true;
+        }
+        return false;
+    }
 }

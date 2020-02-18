@@ -15,7 +15,8 @@ class UserEditRequest extends FormRequest
      */
     public function authorize()
     {
-            return $this->user()->role === 'Admin';
+        $user = $this->route()->parameter('user');
+        return auth()->user()->can('update', $user);
     }
 
     /**

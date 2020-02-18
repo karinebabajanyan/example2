@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\User;
 
 class UserCreateRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->role==='Admin';
+        return auth()->user()->can('create', User::class);
     }
 
     /**

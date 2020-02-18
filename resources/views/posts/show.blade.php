@@ -44,15 +44,12 @@
                 <p>
                     <a href="{{route('posts.index')}}" class="btn btn-info">Back</a>
                     {{--href="{{route('delete',['id' => $post->id])}}"--}}
-                    @can('isAdmin')
-                        <a href="{{route('posts.edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
-                        <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
-                    @else
-                        @can('delete', $post)
+                        @can('update', $post)
                             <a href="{{route('posts.edit',['id' => $post->id])}}" class="btn btn-default">Edit</a>
+                        @endcan
+                        @can('delete', $post)
                             <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">Delete</a>
                         @endcan
-                    @endcan
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">

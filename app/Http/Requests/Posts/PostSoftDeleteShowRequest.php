@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\User;
+use App\Post;
 
-class PostSoftDeleteRequest extends FormRequest
+class PostSoftDeleteShowRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +15,7 @@ class PostSoftDeleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->role === 'Admin';
+        return auth()->user()->can('softDeleteShow',Post::class);
     }
 
     /**

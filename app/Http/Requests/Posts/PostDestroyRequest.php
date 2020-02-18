@@ -14,12 +14,8 @@ class PostDestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        $post_id = $this->route()->parameter('post');
-        $user_id=$this->user()->id;
-        if(Post::where('id','=' ,$post_id)->where('user_id',$user_id)->first() || $this->user()->role==='Admin'){
-            return true;
-        }
-        return false;
+        $post = $this->route()->parameter('post');
+        return auth()->user()->can('delete', $post);
     }
 
     /**

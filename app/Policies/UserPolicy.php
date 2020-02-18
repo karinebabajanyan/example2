@@ -3,10 +3,9 @@
 namespace App\Policies;
 
 use App\User;
-use App\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PostPolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
@@ -23,53 +22,49 @@ class PostPolicy
     }
 
     /**
-     * Determine whether the user can view the post.
+     * Determine whether the user can view the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Post  $post
+     * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $user, Post $post)
+    public function view(User $user, User $model)
     {
-        return TRUE;
+        return true;
     }
 
     /**
-     * Determine whether the user can create posts.
+     * Determine whether the user can create models.
      *
      * @param  \App\User  $user
      * @return mixed
      */
     public function create(User $user)
     {
-        return TRUE;
+        return false;
     }
 
     /**
-     * Determine whether the user can update the post.
+     * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Post  $post
+     * @param  \App\User  $model
      * @return mixed
      */
-    public function update(User $user, Post $post)
+    public function update(User $user, User $model)
     {
-        return $user->id == $post->user_id;
+        return false;
     }
 
     /**
-     * Determine whether the user can delete the post.
+     * Determine whether the user can delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Post  $post
+     * @param  \App\User  $model
      * @return mixed
      */
-    public function delete(User $user, Post $post)
+    public function delete(User $user, User $model)
     {
-        return $user->id == $post->user_id;
-    }
-
-    public function softDeleteShow(){
         return false;
     }
 }

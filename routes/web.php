@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth']], function () {
     //Delete one image route
     Route::post('/delete-image','PostController@deleteImage')->name('posts.delete-image');
     //Show soft deleted posts route
-    Route::get('/soft-deleted-posts','PostController@softDeletedPosts')->name('posts.soft-deleted-posts');
+    Route::get('/soft-deleted-posts','PostController@softDeletedPostsShow')->name('posts.soft-deleted-posts');
     //User profile image update route
     Route::post('/users/update','UserController@updateProfileImage')->name('users.update-profile-image');
 });

@@ -80,7 +80,7 @@
                                             Posts
                                         </a>
                                     </li>
-                                    @can('isAdmin')
+                                    @can('softDeleteShow',\App\Post::class)
                                         <li>
                                             <a href="{{route('posts.soft-deleted-posts')}}">
                                                 Soft Deleted Posts

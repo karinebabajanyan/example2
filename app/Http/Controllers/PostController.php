@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\FileService;
+use App\User;
 use Auth;
 use App\Post;
 use App\File;
@@ -14,7 +15,7 @@ use App\Http\Requests\Posts\PostEditRequest;
 use App\Http\Requests\Posts\PostShowRequest;
 use App\Http\Requests\Posts\PostDestroyRequest;
 use App\Http\Requests\Posts\PostDeleteImageRequest;
-use App\Http\Requests\Posts\PostSoftDeleteRequest;
+use App\Http\Requests\Posts\PostSoftDeleteShowRequest;
 
 class PostController extends Controller
 {
@@ -50,9 +51,7 @@ class PostController extends Controller
     {
         $images = $request->all()['files']["newfile"];
         $directoryPath=FileService::makeDirectory('posts');
-        $id = auth()->id();
         $postModel=new Post;
-        $request['user_id']=$id;
         $post=Post::create($request->only($postModel->getFillable()));
         foreach ($images as $key => $image) {
             $category=null;
@@ -70,9 +69,8 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id,PostShowRequest $request)
+    public function show(Post $post,PostShowRequest $request)
     {
-        $post=Post::where('id','=' ,$id)->first();
         return view('posts.show',['post'=>$post]);
     }
 
@@ -82,14 +80,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, PostEditRequest $request)
+    public function edit(Post $post, PostEditRequest $request)
     {
-        $post=Post::where('id','=' ,$id)->first();
-        if($post) {
-                return view('posts.edit',['post'=>$post,]);
-        } else {
-            return redirect('posts')->withErrors(["Post $id is not exists"]);
-        }
+        return view('posts.edit',['post'=>$post,]);
     }
 
     /**
@@ -99,14 +92,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PostUpdateRequest $request, $id)
+    public function update(PostUpdateRequest $request, Post $post)
     {
-        Post::where('id',$id)->update([
+        $post->update([
             'title'=>$request->get('title'),
             'description'=>$request->get('description'),
         ]);
 
-        File::where('fileable_id',$id)->where('fileable_type','posts')->where('category','checked')->update([
+        File::where('fileable_id',$post->id)->where('fileable_type','posts')->where('category','checked')->update([
             'category'=>NULL,
         ]);
 
@@ -118,7 +111,7 @@ class PostController extends Controller
                 if($image->getClientOriginalName() === $request->get('images')) {
                     $category = 'checked';
                 }
-                FileService::saveFile($image,$id,'posts',$directoryPath,$category);
+                FileService::saveFile($image,$post->id,'posts',$directoryPath,$category);
             }
         }
 
@@ -137,21 +130,16 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id , PostDestroyRequest $request)
+    public function destroy(Post $post , PostDestroyRequest $request)
     {
-            $post = Post::where('id', '=', $id)->first();
-            if($post) {
-                $images = $post->files;
-                if($images) {
-                    $post->delete();
-                    foreach ($images as $key => $image) {
-                        $image->delete();
-                    }
-                }
-                return redirect('posts');
-            } else {
-                return redirect('posts')->withErrors(["Post $id is not exists"]);;
+        $images = $post->files;
+        if($images) {
+            $post->delete();
+            foreach ($images as $key => $image) {
+                $image->delete();
             }
+        }
+        return redirect('posts');
     }
     /**
      * Remove the specified image from storage.
@@ -192,7 +180,7 @@ class PostController extends Controller
      * @param  PostSoftDeleteRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function softDeletedPosts(PostSoftDeleteRequest $request){
+    public function softDeletedPostsShow(PostSoftDeleteShowRequest $request){
         $onlySoftDeleted = Post::onlyTrashed()->get();
         return view('posts.soft',['onlySoftDeleted'=>$onlySoftDeleted]);
     }

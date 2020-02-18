@@ -50,9 +50,8 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        $postModel=new User;
-        $request['confirmed_at']=date("Y-m-d h:i:s", time());
-        User::create($request->only($postModel->getFillable()));
+        $userModel=new User;
+        User::create($request->only($userModel->getFillable()));
         return redirect('users');
     }
 
@@ -87,14 +86,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,UserEditRequest $request)
+    public function edit(User $user,UserEditRequest $request)
     {
-        $user=User::where('id',$id)->first();
-        if($user){
-            return view('users.edit',['user'=>$user]);
-        }else{
-            return back()->withErrors(['User is not exists']);
-        }
+        return view('users.edit',['user'=>$user]);
     }
 
     /**
@@ -104,9 +98,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        User::where('id',$id)->update([
+       $user->update([
             'name'=>$request->name,
             'email'=>$request->email,
             'role'=>$request->role,
@@ -120,40 +114,34 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, UserDestroyRequest $request)
+    public function destroy(User $user, UserDestroyRequest $request)
     {
-        $user = User::where('id', $id)->first();
-
-        if ($user) {
-            if ($user->delete()) {
-                $social = SocialIdentity::where('user_id', $id)->first();
-                if ($social) {
-                    $social->delete();
+        if ($user->delete()) {
+            $social = SocialIdentity::where('user_id', $user->id)->first();
+            if ($social) {
+                $social->delete();
+            }
+            $avatar=$user->cover_image;
+            if($avatar){
+                if (file_exists(public_path($avatar->path))) {
+                    unlink(public_path($avatar->path));
                 }
-                $avatar=$user->cover_image;
-                if($avatar){
-                    if (file_exists(public_path($avatar->path))) {
-                        unlink(public_path($avatar->path));
-                    }
-                    $avatar->delete();
-                }
-                $posts=$user->posts;
-                if($posts){
-                    foreach ($posts as $key => $post) {
-                        $images=$post->files;
-                        if($images){
-                            foreach ($images as $k => $image) {
-                                $image->delete();
-                            }
+                $avatar->delete();
+            }
+            $posts=$user->posts;
+            if($posts){
+                foreach ($posts as $key => $post) {
+                    $images=$post->files;
+                    if($images){
+                        foreach ($images as $k => $image) {
+                            $image->delete();
                         }
-                        $post->delete();
                     }
+                    $post->delete();
                 }
             }
-            return redirect('users');
-        }else{
-            return redirect('users');
         }
+        return redirect('users');
     }
 
     /**
