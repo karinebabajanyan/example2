@@ -49,15 +49,21 @@ class PostController extends Controller
      */
     public function store(PostStoreRequest $request,FileService $fileService)
     {
-        $images = $request->all()['files']["newfile"];
+        $data = $request->all();
         $postModel=new Post;
         $post=Post::create($request->only($postModel->getFillable()));
-        foreach ($images as $key => $image) {
-            $category=null;
-            if('new' . $key===$request->get('check')) {
-                $category='checked';
+        $ischeck = $request->get('check');
+        if(array_get($ischeck, 'isNew')) {
+            if (array_get($data, 'files.newfile')) {
+                $images = array_get($data, 'files.newfile');
+                foreach ($images as $key => $image) {
+                    $category = null;
+                    if ($key === (int)$ischeck['id']) {
+                        $category = 'checked';
+                    }
+                    $fileService->saveFile($image, $post, $category);
+                }
             }
-            $fileService->saveFile($image, $post, $category);
         }
         return redirect('posts');
     }
@@ -104,7 +110,6 @@ class PostController extends Controller
         ]);
 
         $ischeck = $request->get('check');
-        if($ischeck['isNew']) {
             if (array_get($data, 'files.newfile')) {
                 $images = array_get($data, 'files.newfile');
                 foreach ($images as $key => $image) {
@@ -115,10 +120,11 @@ class PostController extends Controller
                     $fileService->saveFile($image, $post, $category);
                 }
             }
+        if(!array_get($ischeck, 'isNew')){
+            File::where('id',$ischeck['id'])->update([
+                'category'=>'checked',
+            ]);
         }
-        File::where('id',$ischeck['id'])->update([
-            'category'=>'checked',
-        ]);
         return redirect('posts');
     }
 

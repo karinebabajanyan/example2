@@ -48,7 +48,7 @@ class FileList {
                             previewImageBox = document.createElement('div'),
                             removeImage = document.createElement('i'),
                             removeIcon = document.createTextNode('x'),
-                            checkImage=document.createElement('input');
+                            checkImage=document.createElement('input'),
                             checkHidden=document.createElement('input');
                         newInput.type = "file";
                         newInput.name = "files[newfile][]";
@@ -59,7 +59,6 @@ class FileList {
                         checkImage.id= 'images'+j;
                         checkHidden.type = 'hidden';
                         checkHidden.name='check[isNew]';
-                        checkHidden.value= true;
                         if(j===0 && imgUploadPreview.childElementCount === 0){
                             checkImage.checked=true;
                             ischeck=0;
@@ -72,7 +71,6 @@ class FileList {
                             console.log(newInput.files)
                             removeImage.appendChild(removeIcon);
                             previewImageBox.appendChild(checkImage);
-                            previewImageBox.appendChild(checkHidden);
                             previewImageBox.appendChild(previewImage);
                             previewImageBox.classList.add('cc-selector-2','previewImage');
                             previewImageBox.appendChild(removeImage);
@@ -104,6 +102,8 @@ class FileList {
                         }
                         function checkedItem(e) {
                             ischeck=$(this).parent().index()
+                            checkHidden.value= true;
+                            previewImageBox.appendChild(checkHidden);
                         }
                         arr1.push(text);
                     }
