@@ -15,11 +15,8 @@ class PostDeleteImageRequest extends FormRequest
      */
     public function authorize()
     {
-        if($this->ajax()){
-            $file=File::find($this->id)->where('fileable_type','posts')->first();
-            return auth()->user()->can('delete', Post::find($file->fileable_id));
-        }
-        return false;
+        $file=File::find($this->id)->where('fileable_type','posts')->first();
+        return auth()->user()->can('delete', Post::find($file->fileable_id));
     }
 
     /**

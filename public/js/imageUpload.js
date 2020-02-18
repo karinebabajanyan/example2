@@ -42,7 +42,6 @@ class FileList {
                     let reader = new FileReader;
 
                     reader.onload = function (event) {
-                        j++;
                         var text=photoUpload.files[i].name;
                         let previewImage = document.createElement('label'),
                             newInput=input = document.createElement("input"),
@@ -50,14 +49,18 @@ class FileList {
                             removeImage = document.createElement('i'),
                             removeIcon = document.createTextNode('x'),
                             checkImage=document.createElement('input');
+                            checkHidden=document.createElement('input');
                         newInput.type = "file";
                         newInput.name = "files[newfile][]";
                         newInput.style.display="none";
                         checkImage.type='radio';
-                        checkImage.name='images';
-                        checkImage.value= photoUpload.files[i].name;
+                        checkImage.name='check[id]';
+                        checkImage.value= j;
                         checkImage.id= 'images'+j;
-                        if(j===1 && imgUploadPreview.childElementCount === 0){
+                        checkHidden.type = 'hidden';
+                        checkHidden.name='check[isNew]';
+                        checkHidden.value= true;
+                        if(j===0 && imgUploadPreview.childElementCount === 0){
                             checkImage.checked=true;
                             ischeck=0;
                         }
@@ -69,6 +72,7 @@ class FileList {
                             console.log(newInput.files)
                             removeImage.appendChild(removeIcon);
                             previewImageBox.appendChild(checkImage);
+                            previewImageBox.appendChild(checkHidden);
                             previewImageBox.appendChild(previewImage);
                             previewImageBox.classList.add('cc-selector-2','previewImage');
                             previewImageBox.appendChild(removeImage);
@@ -77,16 +81,17 @@ class FileList {
                             removeImage.addEventListener('click', removeItem);
                             checkImage.addEventListener('click', checkedItem);
                         }
-
+                        j++;
                         // confirm remove item
                         function removeItem(e) {
+                            console.log(e);
                             let index=arr1.length;
                             if(imgUploadPreview.childElementCount !== 1){
                                 let radio=$(this).parent().next().children("input[type=radio]");
                                 let this_radio=$(this).parent().children("input[type=radio]");
                                 // let emement = $(this).parent().children("input[type=radio]").val();
                                 for (var i=0;i<index;i++){
-                                    if(arr1[i]== this_radio.val()){
+                                    if(i== this_radio.val()){
                                         arr1.splice(i, 1);
                                         if(this_radio.is(':checked')) {
                                             radio.attr('checked', 'checked');

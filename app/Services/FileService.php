@@ -6,8 +6,13 @@ use App\File;
 
 class FileService {
 
-    //files directory maker
-    public static function makeDirectory($type){
+    /**
+     * Files directory maker.
+     *
+     * @param  string $type
+     * @return string
+     */
+    private function makeDirectory($type){
         $directoryPathFiles=public_path('files');
         $directoryPath=$directoryPathFiles.'/'.$type;
         if (!file_exists($directoryPathFiles) || !file_exists($directoryPath)){
@@ -16,26 +21,24 @@ class FileService {
         return $directoryPath;
     }
 
-    //Save post or user files in database
-    public static function saveFile($image,$id, $type ,$directoryPath, $category){
-        $new_name = mt_rand().'.'.$image->getClientOriginalExtension();
+
+    /**
+     * Save post or user files in database.
+     *
+     * @params $image $model $category
+     */
+    public function saveFile($image, $model, $category){
+        $newName = mt_rand().'.'.$image->getClientOriginalExtension();
+
         File::create([
-            'fileable_id'=>$id,
-            'fileable_type'=>$type,
+            'fileable_id' => $model->id,
+            'fileable_type' => $model->getMorphClass(),
             'original_name'=>$image->getClientOriginalName(),
             'category'=>$category,
-            'path'=>'/files/'.$type.'/'.$new_name,
+            'path' => '/files/' . $model->getMorphClass() . '/' . $newName,
         ]);
-        $image->move($directoryPath, $new_name);
-    }
 
-    //Update post or user files in database
-    public static function updateImage($file, $image,$directoryPath, $type){
-        $new_name = mt_rand().'.'.$image->getClientOriginalExtension();
-        $file->update([
-            'original_name'=>$image->getClientOriginalName(),
-            'path'=>'/files/'.$type.'/'.$new_name,
-        ]);
-        $image->move($directoryPath, $new_name);
+        $directoryPath = $this->makeDirectory($model->getMorphClass());
+        $image->move($directoryPath, $newName);
     }
 }

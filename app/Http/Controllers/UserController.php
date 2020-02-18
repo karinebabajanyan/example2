@@ -150,19 +150,16 @@ class UserController extends Controller
      * @param  UserUpdateProfileImageRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function updateProfileImage(UserUpdateProfileImageRequest $request)
+    public function updateProfileImage(UserUpdateProfileImageRequest $request, FileService $fileService)
     {
         $image = $request->file('image');
-        $directoryPath=FileService::makeDirectory('users');
-        $id = Auth::user()->id;
-        $imageExists=File::where('fileable_id',$id)->where('fileable_type','users')->where('category','cover')->first();
+        $user = auth()->user();
+        $imageExists=$user->files()->where('category','cover')->first();
         if($imageExists){
-            if(file_exists(public_path($imageExists->path))){
-                unlink(public_path($imageExists->path));
-            }
-            FileService::updateImage($imageExists,$image,$directoryPath,'users');
-        }else{
-            FileService::saveFile($image,$id,'users',$directoryPath,'cover');
+            $imageExists->delete();
+            $fileService->saveFile($image,$user,'cover');
+        }else {
+            $fileService->saveFile($image,$user,'cover');
         }
         return back()->with('success','Image Upload successful');
     }

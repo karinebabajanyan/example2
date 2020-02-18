@@ -47,18 +47,17 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PostStoreRequest $request)
+    public function store(PostStoreRequest $request,FileService $fileService)
     {
         $images = $request->all()['files']["newfile"];
-        $directoryPath=FileService::makeDirectory('posts');
         $postModel=new Post;
         $post=Post::create($request->only($postModel->getFillable()));
         foreach ($images as $key => $image) {
             $category=null;
-            if($image->getClientOriginalName()===$request->get('images')) {
+            if('new' . $key===$request->get('check')) {
                 $category='checked';
             }
-            FileService::saveFile($image,$post->id,'posts',$directoryPath,$category);
+            $fileService->saveFile($image, $post, $category);
         }
         return redirect('posts');
     }
@@ -92,35 +91,34 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PostUpdateRequest $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post, FileService $fileService)
     {
-        $post->update([
+        $data = $request->all();
+        $post->update([//Փոխել
             'title'=>$request->get('title'),
             'description'=>$request->get('description'),
         ]);
 
-        File::where('fileable_id',$post->id)->where('fileable_type','posts')->where('category','checked')->update([
-            'category'=>NULL,
+        $post->files()->where('category','checked')->update([
+            'category' => NULL,
         ]);
 
-        if(isset($request->all()["files"]["newfile"])) {
-            $images = $request->all()['files']["newfile"];
-            $directoryPath=FileService::makeDirectory('posts');
-            foreach ($images as $key => $image) {
-                $category = null;
-                if($image->getClientOriginalName() === $request->get('images')) {
-                    $category = 'checked';
+        $ischeck = $request->get('check');
+        if($ischeck['isNew']) {
+            if (array_get($data, 'files.newfile')) {
+                $images = array_get($data, 'files.newfile');
+                foreach ($images as $key => $image) {
+                    $category = null;
+                    if ($key === (int)$ischeck['id']) {
+                        $category = 'checked';
+                    }
+                    $fileService->saveFile($image, $post, $category);
                 }
-                FileService::saveFile($image,$post->id,'posts',$directoryPath,$category);
             }
         }
-
-        if(isset($request->all()["files"]["old_files"])) {
-            $img_id=(int)$request->get('images');
-            File::where('id',$img_id)->update([
-                'category'=>'checked',
-            ]);
-        }
+        File::where('id',$ischeck['id'])->update([
+            'category'=>'checked',
+        ]);
         return redirect('posts');
     }
 
@@ -161,6 +159,9 @@ class PostController extends Controller
             $image1 = File::where('id', $id_image)->where('category', 'checked')->first();
             if ($file->delete()) {
                 if ($image1) {
+                    $file->update([
+                        'category' => null,
+                    ]);
                     File::where('id', $next->id)->update([
                         'category' => 'checked',
                     ]);

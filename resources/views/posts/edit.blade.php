@@ -18,9 +18,11 @@
                 @foreach($post->files as $k=>$image)
                     <div class="cc-selector-2 previewImage">
                         @if($image->category==='checked')
-                            <input type="radio" name="images" value="{{$image->id}}" id="img{{$image->id}}" checked>
+                            <input type="radio" name="check[id]" value="{{$image->id}}" id="img{{$image->id}}" checked>
+                            <input type="hidden" name="check[isNew]" value="{{false}}">
                         @else
-                            <input type="radio" name="images" value="{{$image->id}}" id="img{{$image->id}}">
+                            <input type="radio" name="check[id]" value="{{$image->id}}" id="img{{$image->id}}">
+                            <input type="hidden" name="check[isNew][]" value="{{false}}">
                         @endif
                         <label class="drinkcard-cc" for="img{{$image->id}}" style="background-image: url('{{$image->path}}')"></label>
                         {{--<img src="../photos/{{$image->image_upload}}" class="drinkcard-cc">--}}
